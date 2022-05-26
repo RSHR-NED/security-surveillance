@@ -42,10 +42,9 @@ def main() -> None:
             x, y, w, h = face  # get face coordinates
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)  # draw rectangle around face
 
-            # face = frame[y:y+h, x:x+w]  # extract face from frame
+            face = frame[y:y+h, x:x+w]  # extract face from frame
             
-            # face = np.array(face)  # convert to numpy array (for deepface)
-            # recognition = DeepFace.find(face, db_path = "./unidentified_faces")  # recognize face
+            recognition = DeepFace.find(face, db_path = "./unidentified_faces")  # recognize face
             # print(recognition)
    
         cv2.imshow("Face Recognition", frame)  # display the current frame
