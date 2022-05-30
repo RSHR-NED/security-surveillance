@@ -2,6 +2,7 @@ import cv2
 from time import time
 from deepface import DeepFace
 import numpy as np
+import face_recognition as fr
 
 
 def main() -> None:
@@ -34,8 +35,8 @@ def main() -> None:
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
 
         # run face detection algorithm
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # convert to grayscale for face detection
-        faces = face_cascade.detectMultiScale(gray_frame, 1.1, 4)  # Detect faces
+        RGB_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert to grayscale for face detection
+        faces = fr.face_locations(RGB_frame)  # Detect faces
 
         # for every face detected
         for face in faces:
