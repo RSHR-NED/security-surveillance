@@ -1,8 +1,5 @@
-import cv2
-from time import time
 from deepface import DeepFace
-import numpy as np
-import face_recognition as fr
+from modules import *
 
 
 def main() -> None:
@@ -34,19 +31,15 @@ def main() -> None:
             break
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
 
-        # run face detection algorithm
-        RGB_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert to grayscale for face detection
-        faces = fr.face_locations(RGB_frame)  # Detect faces
+        # run face recognition
+        images = ImgDatabase.read_identified_faces_db("./identified_faces")
+        E = Encodings()
+        E.find_encodings(images)
+        encodings = E.get_all_encodings()
 
-        # for every face detected
-        for face in faces:
-            x, y, w, h = face  # get face coordinates
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)  # draw rectangle around face
+        FR = FaceRecognition()
+        FR.comparing_faces(frame,encodings)
 
-            face = frame[y:y+h, x:x+w]  # extract face from frame
-            
-            recognition = DeepFace.find(face, db_path = "./unidentified_faces")  # recognize face
-            # print(recognition)
    
         cv2.imshow("Face Recognition", frame)  # display the current frame
         
@@ -65,3 +58,19 @@ def get_knowledge() -> dict:
 if __name__ == "__main__":
     main()
 
+
+
+
+
+"""         RGB_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert to grayscale for face detection
+        faces = fr.face_locations(RGB_frame)  # Detect faces
+
+        # for every face detected
+        for face in faces:
+            x, y, w, h = face  # get face coordinates
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)  # draw rectangle around face
+
+            face = frame[y:y+h, x:x+w]  # extract face from frame
+            
+            recognition = DeepFace.find(face, db_path = "./unidentified_faces")  # recognize face
+            # print(recognition) """
