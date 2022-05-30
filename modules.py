@@ -1,25 +1,31 @@
+
 from time import time
 import os
 import cv2
-from cv2 import cvtColor
 import face_recognition as fr
 import numpy as np
 
 
-class Encodings:
-
+class EncodingsDB:
+    '''
+    Handle the EncodingDB
+    # Now, we consider one encoding of each face
+    '''
     def __init__(self) -> None:
         self.encodings = {}
     
+    # find all the encodings of the given image dictionary
     def find_encodings(self, images:dict ):
         for id in images:
             enc_id = fr.face_encodings(images[id])[0]
             self.encodings[ id ] = enc_id
     
+    # add new encoding to the EncodingDB
     def add_face_encoding(self, id, image):
         enc_id = fr.face_encodings(image)[0]
         self.encodings[ id ] = enc_id
     
+    # delete encoding from the encodingDB
     def del_face_encoding(self, id):
         del self.encodings[ id ]
     
@@ -27,6 +33,7 @@ class Encodings:
     def get_all_encodings(self):
         return np.array( list(self.encodings.values()) )
     
+    # update the encodings
     def set_face_encoding(self, id):
         pass
 
@@ -36,7 +43,7 @@ class Encodings:
 
 class ImgDatabase:
 
-
+    # read the images in the idenifiedDB and return dictionary of {id : image}
     def read_identified_faces_db(path):
         # each id with images,arr
         identified_faces = {}
@@ -54,6 +61,7 @@ class ImgDatabase:
         return identified_faces
     
 
+    # read the images in the unidenifiedDB and return dictionary of {id : image}
     def read_unidentified_faces_db(path):
 
         unidentified_faces = {}
@@ -70,11 +78,16 @@ class ImgDatabase:
         
         return unidentified_faces
 
+
+
+    # If the user marked the faces to be known, then it move the face from identifiedDB and add encoding of that face in the EncodingDB
     def marked_known(self,id):
-        
         pass
     
-    def save_image(self,image,path):
+
+
+    # save image to the speified path
+    def save_image(image,path):
         # upscaling the image by 4 b/c we downsize in detection
         resize_image  = cv2.resize(image, (100,100),interpolation=cv2.INTER_LINEAR)
         cv2.imwrite(path, resize_image)
@@ -88,7 +101,7 @@ class FaceDetection:
         self.faces_loc = None
 
     def detect_faces(self, frame, resize = 0.25 ):
-        # down sampling an image
+        # down sampling of an image b/c of optimizing time in which INTER_AREA is done great in downsizing
         resized_frame = cv2.resize(frame, (0,0), None, resize , resize, interpolation=cv2.INTER_AREA)
         self.RGB_resized_frame = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB )
         self.faces_loc = fr.face_locations(self.RGB_resized_frame)
@@ -97,6 +110,7 @@ class FaceDetection:
         else:
             return None
     
+    # encode the faces of the image given the location of the faces
     def encode_detect_faces(self):
         encoded = fr.face_encodings(self.RGB_resized_frame, self.faces_loc)
         return encoded
@@ -108,7 +122,8 @@ class FaceRecognition:
         self.FD = FaceDetection()
         self.ImgDB = ImgDatabase()
 
-
+    
+    # compares the each faces of current frame with the identified databases
     def comparing_faces(self, frame, encodingsDB):
         
         detected_faces = self.FD.detect_faces(frame)
@@ -116,7 +131,7 @@ class FaceRecognition:
             encoded_faces = self.FD.encode_detect_faces()
             match  = fr.compare_faces(encodingsDB, encoded_faces)
             print(match)
-
+            # still more to code
 
         else:
             return "Face Not Detected"
@@ -141,10 +156,10 @@ class FaceRecognition:
 
 
 
-
+# Constant
 
 images = ImgDatabase.read_identified_faces_db("./identified_faces")
-E = Encodings()
+E = EncodingsDB()
 E.find_encodings(images)
 encodings = E.get_all_encodings()
 
