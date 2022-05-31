@@ -5,23 +5,31 @@ import cv2
 import face_recognition as fr
 import numpy as np
 
-
+# This class handles the encodings of the known faces in encdoingsDB.json file
 class EncodingsDB:
     '''
     Handle the EncodingDB
     # Now, we consider one encoding of each face
+    # Now, EncdoingsDB class only handle local self.encodings variable
     '''
+
+    '''
+    Required
+    # handle the encodingDB.json file
+    '''
+    # this function loads the encodingsDF file
     def __init__(self) -> None:
         self.encodings = {}
     
-    # find all the encodings of the given image dictionary
-    def find_encodings(self, images:dict ):
+    # find all the encodings of the given image
+    # parameter -> images = { id: image_array, id : image array}
+    def find_encodings(self, images:dict ): 
         for id in images:
             enc_id = fr.face_encodings(images[id])[0]
             self.encodings[ id ] = enc_id
     
-    # add new encoding to the EncodingDB
-    def add_face_encoding(self, id, image):
+    # add new encoding of the face to the EncodingDB
+    def add_face_encoding(self, id:int, image:list):
         enc_id = fr.face_encodings(image)[0]
         self.encodings[ id ] = enc_id
     
@@ -33,17 +41,18 @@ class EncodingsDB:
     def get_all_encodings(self):
         return np.array( list(self.encodings.values()) )
     
-    # update the encodings
-    def set_face_encoding(self, id):
+    # update the encodings of the given id 
+    def set_face_encoding(self, id:int, image:list):
         pass
 
 
 
 
-
+# This class handle the Images of the unidentifed images DB
 class ImgDatabase:
 
     # read the images in the idenifiedDB and return dictionary of {id : image}
+    # temporary
     def read_identified_faces_db(path):
         # each id with images,arr
         identified_faces = {}
@@ -80,8 +89,8 @@ class ImgDatabase:
 
 
 
-    # If the user marked the faces to be known, then it move the face from identifiedDB and add encoding of that face in the EncodingDB
-    def marked_known(self,id):
+    # If the user marked the faces to be known, then it will use EncodingDB.add_encoding_face to add the faces in the identified faces of the Encdoings Databases
+    def marked_known(self,id:int):
         pass
     
 
@@ -89,7 +98,7 @@ class ImgDatabase:
     # save image to the speified path
     def save_image(image,path):
         # upscaling the image by 4 b/c we downsize in detection
-        resize_image  = cv2.resize(image, (100,100),interpolation=cv2.INTER_LINEAR)
+        resize_image  = cv2.resize(image, (200,200),interpolation=cv2.INTER_LINEAR)
         cv2.imwrite(path, resize_image)
     
 
@@ -192,7 +201,16 @@ print("Execution Time:", end-start) """
 
 
 
+### Advantages
+# Dont need to save the images of the identified databases
+# for compare faces. only on the bases of the generated 260 int values
+# Hog is uses due to which slight tilt face can be detect
+# 
 
+### Research Required
 
-
+# which resizing technique is best for the upsampling or down-sampling
+# Resizing in the way that small face can detect
+# How to set image id of the running frame
+# How to optimize the algorithm 
  

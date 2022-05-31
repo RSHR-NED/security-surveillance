@@ -9,20 +9,24 @@ def test_recognition_face():
     image_M = fr.load_image_file("identified_faces/1.png")  # read test image in array
     image_M = cv2.cvtColor(image_M, cv2.COLOR_BGR2RGB)
     resized_image_M = cv2.resize(image_M, (0,0), None, 0.25 , 0.25, interpolation=cv2.INTER_AREA)
-    cv2.imshow("pic", resized_image_M)
+    # cv2.imshow("pic", resized_image_M)
     
     cv2.waitKey(0)
-    input()
     face_loc_M = fr.face_locations(image_M)[0]
     face_enc_M = fr.face_encodings(image_M)[0]
-    print(face_enc_M)
+    # print(face_enc_M)
     print(type(face_enc_M))
     print(len(face_enc_M))
-    input()
+    #input()
 
 
     image_M_test = fr.load_image_file('unidentified_faces/Marshmello_test.jpg')
     image_M_test = cv2.cvtColor(image_M_test, cv2.COLOR_BGR2RGB)
+
+    resize_image  = cv2.resize(image_M_test, (250, 250),interpolation=cv2.INTER_LINEAR)
+    cv2.imwrite("resize.png", resize_image)
+    input()
+    
     face_loc_M_test = fr.face_locations(image_M_test)[0]
     face_enc_M_test = fr.face_encodings(image_M_test)[0]
 
