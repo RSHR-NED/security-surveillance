@@ -32,8 +32,9 @@ def main() -> None:
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
 
         # run face recognition
+
         images = ImgDatabase.read_identified_faces_db("./identified_faces")
-        E = Encodings()
+        E = EncodingsDB()
         E.find_encodings(images)
         encodings = E.get_all_encodings()
 
