@@ -25,3 +25,6 @@ import os
 import os as p
 p.g = 5
 print(p.g,os.g)
+
+
+

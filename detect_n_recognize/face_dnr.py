@@ -1,6 +1,6 @@
 import cv2
 import face_recognition as fr
-from handle_databases import *
+from .handle_databases import ImgDatabase
 
 
 class FaceDetection:
@@ -29,7 +29,7 @@ class FaceRecognition:
 
     def __init__(self) -> None:
         self.FD = FaceDetection()
-        self.ImgDB = ImgDatabase()
+        ImgDatabase()
 
     
     # compares the each faces of current frame with the identified databases
