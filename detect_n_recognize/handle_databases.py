@@ -2,6 +2,7 @@ import os
 import numpy as np
 import cv2
 import face_recognition as fr
+import json
 
 
 
@@ -20,30 +21,34 @@ class EncodingsDB:
     '''
     # this function loads the encodingsDF file
     def __init__(self) -> None:
-        self.encodings = {}
+
+        # load ecodingDB.json file
+        with open('encodingsDB.json') as json_file:
+            self.encodings = json.load(json_file)
+    
     
     # find all the encodings of the given image
     # parameter -> images = { id: image_array, id : image array}
-    def find_encodings(self, images:dict ): 
-        for id in images:
-            enc_id = fr.face_encodings(images[id])[0]
-            self.encodings[ id ] = enc_id
+    def find_encodings(self, images:dict):
+        for id_ in images:
+            enc_id = fr.face_encodings(images[id_])[0]
+            self.encodings[ id_ ] = enc_id
     
     # add new encoding of the face to the EncodingDB
-    def add_face_encoding(self, id:int, image:list):
+    def add_face_encoding(self, id_: int, image:list):
         enc_id = fr.face_encodings(image)[0]
-        self.encodings[ id ] = enc_id
+        self.encodings[ id_ ] = enc_id
     
     # delete encoding from the encodingDB
-    def del_face_encoding(self, id):
-        del self.encodings[ id ]
+    def del_face_encoding(self, id_):
+        del self.encodings[ id_ ]
     
     # Now, work with each face with single encodings value
     def get_all_encodings(self):
         return np.array( list(self.encodings.values()) )
     
     # update the encodings of the given id 
-    def set_face_encoding(self, id:int, image:list):
+    def set_face_encoding(self, id_:int, image:list):
         pass
 
 
@@ -91,7 +96,7 @@ class ImgDatabase:
 
 
     # If the user marked the faces to be known, then it will use EncodingDB.add_encoding_face to add the faces in the identified faces of the Encdoings Databases
-    def marked_known(self,id:int):
+    def marked_known(self, id_:int):
         pass
     
 
