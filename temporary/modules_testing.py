@@ -51,4 +51,21 @@ print("Execution Time:", end-start)
 # Resizing in the way that small face can detect
 # How to set image id of the running frame
 # How to optimize the algorithm 
+
+
+
+# deep face
+
+"""         RGB_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert to grayscale for face detection
+        faces = fr.face_locations(RGB_frame)  # Detect faces
+
+        # for every face detected
+        for face in faces:
+            x, y, w, h = face  # get face coordinates
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)  # draw rectangle around face
+
+            face = frame[y:y+h, x:x+w]  # extract face from frame
+            
+            recognition = DeepFace.find(face, db_path = "./unidentified_faces")  # recognize face
+            # print(recognition) """
  
