@@ -11,7 +11,6 @@ def main() -> None:
     cam = cv2.VideoCapture(0)
     FRAME_RATE = 7
     prev = 0
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     while True:
 
         # to exit by pressing "q"
@@ -33,7 +32,7 @@ def main() -> None:
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
 
         # run face recognition
-
+        # ............................
         images = ImgDatabase.read_identified_faces_db("./identified_faces")
         E = EncodingsDB()
         E.find_encodings(images)
@@ -42,6 +41,7 @@ def main() -> None:
         FR = FaceRecognition()
         FR.comparing_faces(frame,encodings)
 
+        # ...........................
    
         cv2.imshow("Face Recognition", frame)  # display the current frame
         

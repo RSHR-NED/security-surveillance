@@ -21,10 +21,10 @@
 To see this in action, import the same module in two different files. Set a variable in the module from one of the files and have the other file retrieve that variable from the module.
 Example using the interpreter: """
 
-import os 
+""" import os 
 import os as p
 p.g = 5
 print(p.g,os.g)
-
+ """
 
 
