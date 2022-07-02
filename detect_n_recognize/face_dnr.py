@@ -41,6 +41,5 @@ class FaceRecognition:
             match  = fr.compare_faces(encodingsDB, encoded_faces)
             print(match)
             # still more to code
-
         else:
             return "Face Not Detected"

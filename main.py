@@ -1,13 +1,11 @@
+import imp
 from detect_n_recognize.face_dnr import *
 from detect_n_recognize.handle_databases import*
-import time
+from time import time
 
-
-def main() -> None:
-    knowledge = get_knowledge()
-    
-    # DeepFace.stream(db_path = "./unidentified_faces")
-
+def main() -> None:    
+    E = EncodingsDB()
+    FR = FaceRecognition()
     cam = cv2.VideoCapture(0)
     FRAME_RATE = 7
     prev = 0
@@ -31,18 +29,11 @@ def main() -> None:
             break
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
 
-        # run face recognition
-        # ............................
         images = ImgDatabase.read_identified_faces_db("./identified_faces")
-        E = EncodingsDB()
         E.find_encodings(images)
         encodings = E.get_all_encodings()
 
-        FR = FaceRecognition()
         FR.comparing_faces(frame,encodings)
-
-        # ...........................
-   
         cv2.imshow("Face Recognition", frame)  # display the current frame
         
     cam.release()
