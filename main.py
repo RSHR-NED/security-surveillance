@@ -1,18 +1,14 @@
-import cv2
+import imp
+from detect_n_recognize.face_dnr import *
+from detect_n_recognize.handle_databases import*
 from time import time
-from deepface import DeepFace
-import numpy as np
 
-
-def main() -> None:
-    knowledge = get_knowledge()
-    
-    # DeepFace.stream(db_path = "./unidentified_faces")
-
+def main() -> None:    
+    E = EncodingsDB()
+    FR = FaceRecognition()
     cam = cv2.VideoCapture(0)
     FRAME_RATE = 7
     prev = 0
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     while True:
 
         # to exit by pressing "q"
@@ -33,20 +29,11 @@ def main() -> None:
             break
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
 
-        # run face detection algorithm
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # convert to grayscale for face detection
-        faces = face_cascade.detectMultiScale(gray_frame, 1.1, 4)  # Detect faces
+        images = ImgDatabase.read_identified_faces_db("./identified_faces")
+        E.find_encodings(images)
+        encodings = E.get_all_encodings()
 
-        # for every face detected
-        for face in faces:
-            x, y, w, h = face  # get face coordinates
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)  # draw rectangle around face
-
-            face = frame[y:y+h, x:x+w]  # extract face from frame
-            
-            recognition = DeepFace.find(face, db_path = "./unidentified_faces")  # recognize face
-            # print(recognition)
-   
+        FR.comparing_faces(frame,encodings)
         cv2.imshow("Face Recognition", frame)  # display the current frame
         
     cam.release()
@@ -63,4 +50,3 @@ def get_knowledge() -> dict:
 
 if __name__ == "__main__":
     main()
-

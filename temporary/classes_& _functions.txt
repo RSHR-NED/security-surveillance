@@ -45,7 +45,7 @@ class ImgDatabase:
             read all faces in the identified_faces database and store it to the identified_faces array
         * continue
 
-class DetectFaces:
+class Detection:
 
 class RecognizedFaces:
 
