@@ -66,50 +66,21 @@ class EncodingsDB:
 
 
 # This class handle the Images of the unidentifed images DB
-class ImgDatabase:
+class ImageDatabase:
 
     # read the images in the idenifiedDB and return dictionary of {id : image}
-    # temporary
     def read_identified_faces_db(path):
         # each id with images,arr
         identified_faces = {}
 
         for img in os.listdir(path):
-            # each image loading
             img_arr = fr.load_image_file(("identified_faces/" + img))
-            # It load the image in BGR format So,
             img_arr = cv2.cvtColor(img_arr, cv2.COLOR_BGR2RGB)
-            # scrap image id
             img_id = img.split(".")[0]
-            # added to the dictionary
             identified_faces[img_id] = img_arr
 
         return identified_faces
 
-    # read the images in the unidenifiedDB and return dictionary of {id : image}
-
-    def read_unidentified_faces_db(path):
-
-        unidentified_faces = {}
-
-        for img in os.listdir(path):
-            # each image loading
-            img_arr = fr.load_image_file("./unidentified_faces/" + img)
-            # It load the image in BGR format So,
-            img_arr = cv2.cvtColor(img_arr, cv2.COLOR_BGR2RGB)
-            # scrap image id
-            img_id = img.split(".")[0]
-            # added to the dictionary
-            unidentified_faces[img_id] = img_arr
-
-        return unidentified_faces
-
-    # If the user marked the faces to be known, then it will use EncodingDB.add_encoding_face to add the faces in the identified faces of the Encdoings Databases
-
-    def marked_known(self, id_: int):
-        pass
-
-    # save image to the speified path
 
     def save_image(image, path):
         # upscaling the image by 4 b/c we downsize in detection

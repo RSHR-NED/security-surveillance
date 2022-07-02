@@ -1,0 +1,12 @@
+Types of faces:
+    (1) Unidentified: New faces that we don't have any idea about
+        - Images of these faces will be stored for user to mark as safe or unsafe in the future.
+        - Encodings will also be stored so that whenever an unidentified face that has been seen before comes into frame, it won't be stored again.
+
+    (2) Identified faces: Faces identified (marked) by the user. May fall into one of the following two categories:
+        (i) Safe
+        (ii) Unsafe
+        - Encodings of these faces are required.
+        - Images may or may not be stored
+        - For each face, an id will be associated
+
