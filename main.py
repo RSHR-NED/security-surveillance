@@ -29,27 +29,17 @@ def main() -> None:
 
         # recognize faces in the frame
         frame_faces_labels, frame_face_locations = face_recognizer.recognize_faces(frame)
+        print(frame_faces_labels, frame_face_locations)
 
         # draw rectangles around faces
         for (top, right, bottom, left), name in zip(frame_face_locations, frame_faces_labels):
-            # # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-            # top *= 4
-            # right *= 4
-            # bottom *= 4
-            # left *= 4
-
-            # Draw a box around the face
+            # draw box and label around face
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-            # Draw a box around the face
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
-            # Draw a label with a name below the face
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)  
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
-        # display the resulting frame
-        cv2.imshow('Face Recognizer', frame)
+        cv2.imshow('Face Recognizer', frame)  # display the resulting frame
 
 
         
