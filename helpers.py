@@ -18,7 +18,7 @@ class FaceRecognizer:
         
         # update newest_id
         if len(self.identified_faces) + len(self.unidentified_faces) != 0:
-            self.newest_id = int(max(max(self.identified_faces.keys()), max(self.unidentified_faces.keys())))
+            self.newest_id = max(max(self.identified_faces.keys()), max(self.unidentified_faces.keys()))
 
         print("FaceRecognizer initialized.\n\n")
 
@@ -36,6 +36,7 @@ class FaceRecognizer:
         with open("unidentified_faces_encodings.json", "r") as f:
             try:
                 unidentified_faces = json.load(f)
+                unidentified_faces = {int(key): value for key, value in unidentified_faces.items()}  # convert all id keys to int
             except json.decoder.JSONDecodeError:
                 print("Failed to load unidentified faces from json file.")
                 print("Loading from image folder...")
@@ -61,6 +62,7 @@ class FaceRecognizer:
         with open("./identified_faces_encodings.json", "r") as f:
             try:
                 identified_faces = json.load(f)
+                identified_faces = {int(key): value for key, value in identified_faces.items()}  # convert all id keys to int
             except json.decoder.JSONDecodeError:
                 print("Failed to load identified faces from json file.")
                 print("Loading from image folder...")
@@ -132,7 +134,7 @@ class FaceRecognizer:
 
             # face is not recognized, add to unidentified faces
             new_id = self.get_newest_id()
-            self.unidentified_faces[new_id] = face_encoding
+            self.unidentified_faces[new_id] = face_encoding.tolist()
             # save encoding to json database asynchronously
             threading.Thread(
                 target=self.save_encodings,
