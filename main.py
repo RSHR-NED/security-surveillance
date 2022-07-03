@@ -28,15 +28,15 @@ def main() -> None:
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
 
         # recognize faces in the frame
-        frame_faces_names, frame_face_locations = face_recognizer.recognize_faces(frame)
+        frame_faces_labels, frame_face_locations = face_recognizer.recognize_faces(frame)
 
         # draw rectangles around faces
-        for (top, right, bottom, left), name in zip(frame_face_locations, frame_faces_names):
-            # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-            top *= 4
-            right *= 4
-            bottom *= 4
-            left *= 4
+        for (top, right, bottom, left), name in zip(frame_face_locations, frame_faces_labels):
+            # # Scale back up face locations since the frame we detected in was scaled to 1/4 size
+            # top *= 4
+            # right *= 4
+            # bottom *= 4
+            # left *= 4
 
             # Draw a box around the face
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
