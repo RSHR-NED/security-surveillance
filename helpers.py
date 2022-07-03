@@ -12,8 +12,8 @@ class FaceRecognizer:
         """
         Initializes the FaceRecognizer.
         """
-        self.newest_id = -1
         print("Initializing FaceRecognizer...\n\n")
+        self.newest_id = -1
         self.identified_faces, self.unidentified_faces = self.load_face_encodings()
         
         # update newest_id
@@ -73,7 +73,7 @@ class FaceRecognizer:
                 # for each image in the folder
                 identified_faces_folder = "./identified_faces/"
                 for filename in os.listdir(identified_faces_folder):
-                    image_array = face_recognition.load_image_file((identified_faces + filename))  # load image
+                    image_array = face_recognition.load_image_file((identified_faces_folder + filename))  # load image
                     image_encoding = face_recognition.face_encodings(image_array)[0].tolist()  # encode the image, assuming only one face in image
                     name = filename.split(".")[0]  # get the name of the image (filename without extension)
                     id_ = self.get_new_id()  # get id for the image
@@ -107,7 +107,7 @@ class FaceRecognizer:
         frame = frame[:, :, ::-1]  # convert BGR to RGB (opencv uses BGR, face_recognition uses RGB)
 
         frame_face_locations = face_recognition.face_locations(frame)  # get locations of all faces in the frame
-        if len(frame_face_locations) == 0:
+        if len(frame_face_locations) == 0:  # if no faces are detected
             return [], []
         frame_face_encodings = face_recognition.face_encodings(frame, frame_face_locations)  # get encodings for all faces in the frame
         frame_faces_labels = []  # list of labels for all faces in the frame that can be used on the frame
@@ -115,8 +115,8 @@ class FaceRecognizer:
         unidentified_faces_encodings = list(self.unidentified_faces.values())
 
         identifed_faces_encodings = []
-        for id_ in self.identified_faces.items():
-            identifed_faces_encodings.append(id_[1])
+        for id_ in self.identified_faces:
+            identifed_faces_encodings.append(self.identified_faces[id_][1])
 
         for i in range(len(frame_face_encodings)):  # for each face in the frame
             face_encoding = frame_face_encodings[i]  # get the encoding for the current face
@@ -124,7 +124,7 @@ class FaceRecognizer:
             identified_faces_matches = face_recognition.compare_faces(identifed_faces_encodings, face_encoding)  # get matches for current face against all identified faces
             
             # check against identified faces
-            if len(identifed_faces_encodings) != 0:
+            if len(identifed_faces_encodings) != 0:  # if there are identified faces
                 identified_face_distances = face_recognition.face_distance(identifed_faces_encodings, face_encoding)  # get distances for each face in frame
                 best_match_index = np.argmin(identified_face_distances)  # get index of the lowest distance match
                 if identified_faces_matches[best_match_index] == True:  # if the lowest distance face is actually a match
@@ -136,7 +136,7 @@ class FaceRecognizer:
                     continue  # skip to next face
 
             # check against unidentified faces
-            if len(unidentified_faces_encodings) != 0:
+            if len(unidentified_faces_encodings) != 0:  # if there are unidentified faces
                 unidentified_face_distances = face_recognition.face_distance(unidentified_faces_encodings, face_encoding)  # get distances for each face in frame
                 best_match_index = np.argmin(unidentified_face_distances)  # get index of the lowest distance match
                 if unidentified_faces_matches[best_match_index] == True:  # if the lowest distance face is actually a match
@@ -146,7 +146,7 @@ class FaceRecognizer:
                     frame_faces_labels.append(f"Unidentified (id: {id_})")
                     continue  # skip to next face
 
-            # face is not recognized, add to unidentified faces
+            # face is not recognized as any existing identified or unidentified face, add to unidentified faces
             new_id = self.get_new_id()
             self.unidentified_faces[new_id] = face_encoding.tolist()
             threading.Thread(
