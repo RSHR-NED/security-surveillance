@@ -1,0 +1,4 @@
+1) Find optimal resize factor. (helpers.py, FaceRecognizer.recognize_faces) (same downscale factor as upsacale)
+2) frontend UI
+3) recognizing optimizations
+4) edge cases handle

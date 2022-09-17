@@ -5,12 +5,26 @@ import cv2
 def main() -> None:
     face_recognizer = FaceRecognizer()
     cam = cv2.VideoCapture(0)
+    FRAME_RATE = 15
+    process_frame = True
+    prev = 0
     while True:
 
         # to exit by pressing "q" or esc
         if cv2.waitKey(1) & 0xFF == ord('q') or cv2.waitKey(1) & 0xFF == 27:
             break
+        
+        # limiting to set frame rate
+        time_elapsed = time() - prev
+        if time_elapsed <= 1/FRAME_RATE:
+            continue  # skip this iteration
 
+        # prev = time()
+        process_frame = not process_frame
+        if not process_frame:
+            print("Not processing")
+            continue
+        print("Processing")
         ret, frame = cam.read()  # read a frame
         if not ret:  # if frame is not read correctly
             print("Error: Failed to read frame from camera")
