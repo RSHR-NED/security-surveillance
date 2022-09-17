@@ -2,9 +2,20 @@ from helpers import FaceRecognizer
 from time import time
 import cv2
 
+# for mobile camera feed
+import numpy as np  
+import urllib.request
+
+
 def main() -> None:
     face_recognizer = FaceRecognizer()
-    cam = cv2.VideoCapture(0)
+    URL = "https://192.168.18.56:8080/video"  # mobile camera feed url, from ip webcam app
+    use_mobile_camera = False
+    if use_mobile_camera:
+        cam = cv2.VideoCapture(URL)  # mobile camera feed
+    else:
+        cam = cv2.VideoCapture(0)  # laptop web cam feed
+
     while True:
 
         # to exit by pressing "q" or esc
@@ -17,6 +28,8 @@ def main() -> None:
             break
 
         frame = cv2.flip(frame, 1)  # mirror frame horizontally
+        if use_mobile_camera:
+            frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)  # resize frame
 
         # recognize faces in the frame
         frame_faces_labels, frame_face_locations = face_recognizer.recognize_faces(frame)
