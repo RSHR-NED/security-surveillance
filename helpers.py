@@ -109,13 +109,13 @@ class FaceRecognizer:
         frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)  # resize frame to 1/4th size to reduce processing time
         frame = frame[:, :, ::-1]  # convert BGR to RGB (opencv uses BGR, face_recognition uses RGB)
 
-        print("Detecting faces...")
+        # print("Detecting faces...")
         frame_face_locations = face_recognition.face_locations(frame)  # get locations of all faces in the frame
         if len(frame_face_locations) == 0:  # if no faces are detected
             print("No faces detected.")
             return [], []
 
-        print("Recognizing faces...")
+        # print("Recognizing faces...")
         frame_face_encodings = face_recognition.face_encodings(frame, frame_face_locations)  # get encodings for all faces in the frame
         frame_faces_labels = []  # list of labels for all faces in the frame that can be used on the frame
 
@@ -181,6 +181,7 @@ class FaceRecognizer:
         # scale up frame face locations back to original size
         frame_face_locations = [(int(a * 4), int(b * 4), int(c * 4), int(d * 4)) for (a, b, c, d) in frame_face_locations]  
 
+        print(f"Recognized {len(frame_faces_labels)} faces.")
         return frame_faces_labels, frame_face_locations
 
 
