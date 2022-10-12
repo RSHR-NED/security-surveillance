@@ -21,7 +21,7 @@ class VideoStream():
         frame = cv2.flip(frame, 1) 
 
         # perform face recognition
-        # self.mark_faces(frame)
+        self.mark_faces(frame)
 
         ret, image = cv2.imencode('.jpg', frame)
         return image.tobytes()
