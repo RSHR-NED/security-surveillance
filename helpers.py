@@ -12,11 +12,11 @@ class FaceRecognizer:
         """
         Initializes the FaceRecognizer.
         """
+        self.newest_id = -1
         print("Initializing FaceRecognizer...\n")
         self.identified_faces, self.unidentified_faces = self.load_face_encodings()
         
         # update newest_id to the biggest ID
-        self.newest_id = -1
         if len(self.identified_faces) > 0:  # if atleast one face exists in identified faces database
             self.newest_id = max(self.identified_faces.keys())
         if len(self.unidentified_faces) > 0:  # if atleast one face exists in unidentified faces database

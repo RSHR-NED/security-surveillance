@@ -1,4 +1,3 @@
-import threading
 from flask import Flask, Response, flash, redirect, render_template, request, url_for
 from camera_feed import VideoStream
 

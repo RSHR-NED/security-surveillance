@@ -29,9 +29,6 @@ class VideoStream():
 
     def mark_faces(self, frame):
         # recognize faces in the frame
-        faces_labels, face_locations = self.face_recognizer.recognize_faces(frame)
-
-        # recognize faces in the frame
         frame_faces_labels, frame_face_locations = self.face_recognizer.recognize_faces(frame)
 
         # draw rectangles around faces
