@@ -46,7 +46,7 @@ def video():
     return Response(generate(video_stream),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
+''' Here we add images and store their encodings to the identified.json data   '''
 @app.route('/add_faces', methods=['POST', 'GET'])
 def add_faces():
     if request.method == 'POST':
@@ -76,6 +76,7 @@ def add_faces():
     # Request method is GET
     return render_template('add_faces.html', title='Add Faces')
 
+''' Here we display all the iimages from unidentified faces folder'''
 @app.route("/mark_faces", methods=['POST', 'GET'])
 def mark_faces():
     if request.method == 'POST':
@@ -84,10 +85,36 @@ def mark_faces():
     files_url = []
     for filename in os.listdir('./unidentified_faces'):
         files_url.append(filename)
-    print(files_url)
     # Request method is GET
     return render_template('mark_faces.html', title='Mark Faces', files_url=files_url)
     
+''' Remove the chosen file from the unidentified faces folder and store the encodings in identified.json'''
+@app.route("/mark_img", methods=['POST', 'GET'])
+def mark_img():
+    name = False
+    # here we et the details of image marks as --- safe/unsafe
+    if request.method == 'POST':
+        flash('Face marked POST (debug)')
+        name = request.form['name']
+        label = request.form['label']
+    file_name = request.args.get('search')
+    # here we load encoding of file save it in identified.json and remove it from unidentified faces
+    if file_name:
+            image_array = face_recognition.load_image_file(('./unidentified_faces/' + file_name))
+            face_encoding = face_recognition.face_encodings(image_array)[0] 
+    dict_face = fc.load_face_encodings()[0] 
+        # get the dictionary of identified faces
+    new_id = list(dict_face.keys())[-1] + 1
+    if name:
+        dict_face[new_id] = [name,list(face_encoding),label]
+        fc.save_encodings(dict_face,"./identified_faces_encodings.json")
+        os.remove('./unidentified_faces/' + file_name)
+        flash('Marked Successfully', 'success')
+        return redirect(url_for('mark_faces'))
+
+    return render_template('mark_img.html', title='Mark Faces', img=file_name)
+
+
 if __name__ == '__main__':
     # start video stream thread
     video_stream = VideoStream()

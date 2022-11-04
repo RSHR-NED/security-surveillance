@@ -19,10 +19,13 @@
             </div>
             <div class="thumbwrapper center-block">
                 <br>
+                <form name="searchforma_mobile"  method="GET" class="form-inline mb-5", action="{{ url_for('mark_img') }}">
                 <div class="btn-primary one-click">
-                    <a href="mark_img" class="btn btn-primary">Mark the Face</a>
+                    <input type="hidden" name="search" placeholder="Search" class="form-control" value={{file}}>
+                    <button name="searchbtn" value="Go" class="btn btn-primary" id="searchButtona_mobile" type="submit"> Mark the face </button>
                 </div>
                 <div class="padding-lg"></div>
+                </form>
                 <br><br>
             </div>
         </div>

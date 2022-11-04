@@ -5,6 +5,17 @@
 <h1 style="text-align: center;">{{ title }}</h1>
 
 <!-- form to upload new face, and dropdown for labesl "safe" or "unsafe" options -->
+{% if file %}
+<div class="prod-img center-block"
+                <a href="">
+                    <img src="unidentified_faces/{{file}}"
+                        class="w-100 product-image center-block"
+                        width="140px"
+                        height="250px"
+                        >
+                </a>
+            </div>
+{% endif %}
 <form action="" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="name">Name</label>
