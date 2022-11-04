@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+
+{% block body %}
+
+<h1 style="text-align: center;">{{ title }}</h1>
+
+<!-- form to upload new face, and dropdown for labesl "safe" or "unsafe" options -->
+<form action="" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+    </div>
+    <div class="form-group">
+        <label for="label">Label</label>
+        <select class="form-control" id="label" name="label">
+            <option value="unsafe" selected>Unsafe</option>
+            <option value="safe">Safe</option>
+        </select>
+    <button type="submit" class="btn btn-primary">Submit</button>
+{% endblock %}

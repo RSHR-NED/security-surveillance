@@ -1,0 +1,32 @@
+{% extends 'base.html'%}
+
+{% block body %}
+
+<h1 style="text-align: center;">{{ title }}</h1>
+<br><br>
+<div class="col-lg-8">
+    <div class="row flex-grid" id="order-container">
+        {% for file in files_url %}
+        <div class="col-sm-3 product-wrapper text-center mx-auto">
+            <div class="prod-img center-block"
+                <a href="">
+                    <img src="unidentified_faces/{{file}}"
+                        class="w-100 product-image center-block"
+                        width="140px"
+                        height="250px"
+                        >
+                </a>
+            </div>
+            <div class="thumbwrapper center-block">
+                <br>
+                <div class="btn-primary one-click">
+                    <a href="mark_img" class="btn btn-primary">Mark the Face</a>
+                </div>
+                <div class="padding-lg"></div>
+                <br><br>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
