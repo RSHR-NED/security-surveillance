@@ -4,11 +4,11 @@
 
 <h1 style="text-align: center;">{{ title }}</h1>
 <br><br>
-<div class="col-lg-8">
-    <div class="row flex-grid" id="order-container">
+<div class= "container mx-7" >
+    <div class="row">
         {% for file in files_url %}
-        <div class="col-sm-3 product-wrapper text-center mx-auto">
-            <div class="prod-img center-block"
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card" style="width: 19rem;"
                 <a href="">
                     <img src="unidentified_faces/{{file}}"
                         class="w-100 product-image center-block"
@@ -22,9 +22,8 @@
                 <form name="searchforma_mobile"  method="GET" class="form-inline mb-5", action="{{ url_for('mark_img') }}">
                 <div class="btn-primary one-click">
                     <input type="hidden" name="search" placeholder="Search" class="form-control" value={{file}}>
-                    <button name="searchbtn" value="Go" class="btn btn-primary" id="searchButtona_mobile" type="submit"> Mark the face </button>
+                    <button name="searchbtn" value="Go" class="btn btn-primary" id="searchButtona_mobile"  type="submit"> Mark the face </button>
                 </div>
-                <div class="padding-lg"></div>
                 </form>
                 <br><br>
             </div>
@@ -33,3 +32,4 @@
     </div>
 </div>
 {% endblock %}
+

@@ -16,7 +16,7 @@ def save_media(picture,name):# open s3 instance
     _, f_ext = os.path.splitext(picture.filename)
     pic_fname = name + f_ext
     print(pic_fname)
-    pic_path = os.path.join(app.root_path, 'add_images', pic_fname)
+    pic_path = os.path.join(app.root_path, 'identified_faces', pic_fname)
     
     i = Image.open(picture)
     # resize and save
@@ -60,15 +60,15 @@ def add_faces():
         file_name = save_media(img,name)
         # print(file_name)
         if file_name:
-            image_array = face_recognition.load_image_file(('./add_images/' + file_name))
+            image_array = face_recognition.load_image_file(('./identified_faces/' + file_name))
             face_encoding = face_recognition.face_encodings(image_array)[0] 
-        dict_face = fc.load_face_encodings()[0] 
+        identified_face_enc = fc.load_face_encodings()[0] 
         # get the dictionary of identified faces
-        new_id = list(dict_face.keys())[-1] + 1
+        new_id = list(identified_face_enc.keys())[-1] + 1
         if face_encoding[0]:
-            dict_face[new_id] = [name,list(face_encoding),label]
-            # print(dict_face)
-            fc.save_encodings(dict_face,"./identified_faces_encodings.json")
+            identified_face_enc[new_id] = [name,list(face_encoding),label]
+            # print(identified_face_enc)
+            fc.save_encodings(identified_face_enc,"./identified_faces_encodings.json")
                     
             # print('face_encode',face_encoding)
             flash('Image added successfully', 'success')
@@ -81,7 +81,7 @@ def add_faces():
 def mark_faces():
     if request.method == 'POST':
         flash('Face marked POST (debug)')
-        return redirect(url_for('index'))
+        return redirect(url_for('mark_faces'))
     files_url = []
     for filename in os.listdir('./unidentified_faces'):
         files_url.append(filename)
@@ -102,12 +102,13 @@ def mark_img():
     if file_name:
             image_array = face_recognition.load_image_file(('./unidentified_faces/' + file_name))
             face_encoding = face_recognition.face_encodings(image_array)[0] 
-    dict_face = fc.load_face_encodings()[0] 
-        # get the dictionary of identified faces
-    new_id = list(dict_face.keys())[-1] + 1
+    # load_face_encodings returns a tuple of two dictionaries (identified, unidentified)
+    identified_face_enc = fc.load_face_encodings()[0] 
+    # get the dictionary of identified faces
+    new_id = list(identified_face_enc.keys())[-1] + 1
     if name:
-        dict_face[new_id] = [name,list(face_encoding),label]
-        fc.save_encodings(dict_face,"./identified_faces_encodings.json")
+        identified_face_enc[new_id] = [name,list(face_encoding),label]
+        fc.save_encodings(identified_face_enc,"./identified_faces_encodings.json")
         os.remove('./unidentified_faces/' + file_name)
         flash('Marked Successfully', 'success')
         return redirect(url_for('mark_faces'))
