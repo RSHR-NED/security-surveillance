@@ -156,7 +156,9 @@ class FaceRecognizer:
                     id_ = list(self.unidentified_faces.keys())[best_match_index]
                     frame_faces_labels.append(f"Unidentified (id: {id_})")
                     continue  # skip to next face
-
+            
+            
+            
             # face is not recognized as any existing identified or unidentified face, add to unidentified faces
             new_id = self.get_new_id()
             self.unidentified_faces[new_id] = face_encoding.tolist()
@@ -164,6 +166,8 @@ class FaceRecognizer:
                 target=self.save_encodings,
                 args=(self.unidentified_faces, "./unidentified_faces_encodings.json")
                 ).start()  # save encoding to json database asynchronously
+            
+            self.identified_faces, self.unidentified_faces = self.load_face_encodings()
             
             # extract face image from frame
             face_location = frame_face_locations[i]

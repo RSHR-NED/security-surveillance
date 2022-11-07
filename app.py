@@ -7,7 +7,6 @@ app = Flask(__name__)
 app_interface = Flask(__name__)
 app_face_recognizer = Flask(__name__)
 
-
 @app_face_recognizer.route('/')
 def index():
     return redirect(url_for('video'))
