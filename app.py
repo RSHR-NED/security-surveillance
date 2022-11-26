@@ -6,7 +6,14 @@ import secrets
 from PIL import Image
 from helpers import FaceRecognizer
 import face_recognition
+
+# app defined two flask app
 app = Flask(__name__, static_folder = 'unidentified_faces', template_folder='templates')
+app_interface = Flask(__name__, static_folder = 'unidentified_faces')
+app_face_recognizer = Flask(__name__)
+
+app_interface.config['SECRET_KEY'] = 'asdcsdsfcsdfsfs'
+app_face_recognizer.config['SECRET_KEY'] = 'asdcsdsfcsdfsfs'
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 fc = FaceRecognizer()
 def save_media(picture,name):# open s3 instance
@@ -28,9 +35,10 @@ def save_media(picture,name):# open s3 instance
 
     return pic_fname
 
-@app.route('/')
+@app_face_recognizer.route('/')
 def index():
-    return render_template('index.html', title='Camera Feed')
+    return redirect(url_for('video'))
+    # return render_template('index.html', title='Camera Feed')
 
 
 def generate(stream):
@@ -41,13 +49,14 @@ def generate(stream):
               b'\r\n\r\n')
 
 
-@app.route('/video')
+@app_face_recognizer.route('/video')
 def video():
     return Response(generate(video_stream),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 ''' Here we add images and store their encodings to the identified.json data   '''
-@app.route('/add_faces', methods=['POST', 'GET'])
+# @app_interface.route('/add_faces', methods=['POST', 'GET'])
+@app_interface.route('/', methods=['POST', 'GET'])
 def add_faces():
     if request.method == 'POST':
         name = request.form['name']
@@ -77,7 +86,8 @@ def add_faces():
     return render_template('add_faces.html', title='Add Faces')
 
 ''' Here we display all the iimages from unidentified faces folder'''
-@app.route("/mark_faces", methods=['POST', 'GET'])
+# @app.route("/mark_faces", methods=['POST', 'GET'])
+@app_interface.route("/mark_faces", methods=['POST', 'GET'])
 def mark_faces():
     if request.method == 'POST':
         flash('Face marked POST (debug)')
@@ -89,7 +99,7 @@ def mark_faces():
     return render_template('mark_faces.html', title='Mark Faces', files_url=files_url)
     
 ''' Remove the chosen file from the unidentified faces folder and store the encodings in identified.json'''
-@app.route("/mark_img", methods=['POST', 'GET'])
+@app_interface.route("/mark_img", methods=['POST', 'GET'])
 def mark_img():
     name = False
     # here we et the details of image marks as --- safe/unsafe
@@ -116,7 +126,24 @@ def mark_img():
     return render_template('mark_img.html', title='Mark Faces', img=file_name)
 
 
+# if __name__ == '__main__':
+#     # start video stream thread
+#     video_stream = VideoStream()
+#     app.run(debug=True)
+# With Multi-Threading Apps, YOU CANNOT USE DEBUG!
+# Though you can sub-thread.
+def run_app_interface():
+    app_interface.run(host='127.0.0.1', port=5000, debug=False, threaded=True)
+
+def run_app_face_recognizer():
+    app_face_recognizer.run(host='127.0.0.1', port=5001, debug=False, threaded=True)
+
+
 if __name__ == '__main__':
     # start video stream thread
     video_stream = VideoStream()
-    app.run(debug=True)
+    # Executing the Threads seperatly.
+    t1 = threading.Thread(target=run_app_interface)
+    t2 = threading.Thread(target=run_app_face_recognizer)
+    t1.start()
+    t2.start()
